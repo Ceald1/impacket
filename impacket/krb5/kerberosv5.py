@@ -457,7 +457,7 @@ def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew =
                             int(constants.EncryptionTypes.aes256_cts_hmac_sha1_96.value),
                             int(constants.EncryptionTypes.aes128_cts_hmac_sha1_96.value),
                             # int(constants.EncryptionTypes..value),
-                            int(cipher.enctype)
+                            # int(cipher.enctype)
                         )
                     )
 
