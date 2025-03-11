@@ -88,6 +88,7 @@ class GETST:
         self.__saveFileName = None
         self.__no_s4u2proxy = options.no_s4u2proxy
         self.legacy = options.legacy
+        print(self.legacy)
         if options.hashes is not None:
             self.__lmhash, self.__nthash = options.hashes.split(':')
 
