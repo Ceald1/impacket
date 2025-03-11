@@ -724,7 +724,7 @@ def parse_args():
     dacl_parser.add_argument('-rights-guid', type=str, help='Manual GUID representing the right to write/remove')
     dacl_parser.add_argument('-inheritance', action="store_true", help='Enable the inheritance in the ACE flag with CONTAINER_INHERIT_ACE and OBJECT_INHERIT_ACE. Useful when target is a Container or an OU, '
                                                                        'ACE will be inherited by objects within the container/OU (except objects with adminCount=1)')
-
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)")
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -784,7 +784,7 @@ def get_machine_name(args, domain):
 
 
 def ldap3_kerberos_login(connection, target, user, password, domain='', lmhash='', nthash='', aesKey='', kdcHost=None,
-                         TGT=None, TGS=None, useCache=True):
+                         TGT=None, TGS=None, useCache=True, legacy_etype=True):
     from pyasn1.codec.ber import encoder, decoder
     from pyasn1.type.univ import noValue
     """
@@ -842,7 +842,7 @@ def ldap3_kerberos_login(connection, target, user, password, domain='', lmhash='
     if TGS is None:
         serverName = Principal(target, type=constants.PrincipalNameType.NT_SRV_INST.value)
         tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, kdcHost, tgt, cipher,
-                                                                sessionKey)
+                                                                sessionKey, legacy_etype=legacy_etype)
     else:
         tgs = TGS['KDC_REP']
         cipher = TGS['cipher']
@@ -927,7 +927,7 @@ def init_ldap_connection(target, tls_version, args, domain, username, password, 
     if args.k:
         ldap_session = ldap3.Connection(ldap_server)
         ldap_session.bind()
-        ldap3_kerberos_login(ldap_session, target, username, password, domain, lmhash, nthash, args.aesKey, kdcHost=args.dc_ip)
+        ldap3_kerberos_login(ldap_session, target, username, password, domain, lmhash, nthash, args.aesKey, kdcHost=args.dc_ip, legacy_etype=args.legacy)
     elif args.hashes is not None:
         ldap_session = ldap3.Connection(ldap_server, user=user, password=lmhash + ":" + nthash, authentication=ldap3.NTLM, auto_bind=True)
     else:

@@ -68,6 +68,7 @@ class ADDCOMPUTER:
         self.__targetIp = cmdLineOptions.dc_ip
         self.__baseDN = cmdLineOptions.baseDN
         self.__computerGroup = cmdLineOptions.computer_group
+        self.legacy = cmdLineOptions.legacy
 
         if self.__targetIp is not None:
             self.__kdcHost = self.__targetIp
@@ -326,7 +327,7 @@ class ADDCOMPUTER:
         if TGS is None:
             serverName = Principal(targetName, type=constants.PrincipalNameType.NT_SRV_INST.value)
             tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, kdcHost, tgt, cipher,
-                                                                    sessionKey)
+                                                                    sessionKey, legacy_etype=self.legacy)
         else:
             tgs = TGS['KDC_REP']
             cipher = TGS['cipher']
@@ -548,6 +549,7 @@ if __name__ == '__main__':
                                                                                 'SAMR works over SMB.'
                                                                                 'LDAPS has some certificate requirements'
                                                                                 'and isn\'t always available.')
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)")
 
 
     parser.add_argument('-port', type=int, choices=[139, 445, 636],

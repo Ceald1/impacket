@@ -493,7 +493,7 @@ def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew =
     else:
         # Let's extract the Ticket, change the domain and keep asking
         domain = spn.components[1]
-        return getKerberosTGS(serverName, domain, kdcHost, r, cipher, newSessionKey)
+        return getKerberosTGS(serverName, domain, kdcHost, r, cipher, newSessionKey, legacy_etype=legacy_etype)
 
 ################################################################################
 # DCE RPC Helpers
@@ -548,7 +548,7 @@ def getKerberosType3(cipher, sessionKey, auth_data):
 
 
 def getKerberosType1(username, password, domain, lmhash, nthash, aesKey='', TGT = None, TGS = None, targetName='',
-                     kdcHost = None, useCache = True):
+                     kdcHost = None, useCache = True, legacy_etype=True):
 
     # Convert to binary form, just in case we're receiving strings
     if isinstance(lmhash, str):
@@ -605,7 +605,7 @@ def getKerberosType1(username, password, domain, lmhash, nthash, aesKey='', TGT 
         if TGS is None:
             serverName = Principal(targetName, type=constants.PrincipalNameType.NT_SRV_INST.value)
             try:
-                tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey)
+                tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, legacy_etype=legacy_etype)
             except KerberosError as e:
                 if e.getErrorCode() == constants.ErrorCodes.KDC_ERR_ETYPE_NOSUPP.value:
                     # We might face this if the target does not support AES 

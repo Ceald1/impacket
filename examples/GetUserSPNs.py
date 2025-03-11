@@ -79,6 +79,7 @@ class GetUserSPNs:
         self.__target = None
         self.__targetDomain = target_domain
         self.__lmhash = ''
+        self.legacy = cmdLineOptions.legacy
         self.__nthash = ''
         self.__no_preauth = cmdLineOptions.no_preauth
         self.__outputFileName = cmdLineOptions.outputfile
@@ -412,7 +413,7 @@ class GetUserSPNs:
                         tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(principalName, self.__domain,
                                                                                 self.__kdcIP,
                                                                                 TGT['KDC_REP'], TGT['cipher'],
-                                                                                TGT['sessionKey'])
+                                                                                TGT['sessionKey'], legacy_etype=self.legacy)
                         self.outputTGS(tgs, oldSessionKey, sessionKey, sAMAccountName,
                                        self.__targetDomain + "/" + sAMAccountName, fd)
                     except Exception as e:
@@ -471,7 +472,7 @@ class GetUserSPNs:
                     tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(principalName, self.__domain,
                                                                             self.__kdcIP,
                                                                             TGT['KDC_REP'], TGT['cipher'],
-                                                                            TGT['sessionKey'])
+                                                                            TGT['sessionKey'], legacy_etype=self.legacy)
                     self.outputTGS(tgs, oldSessionKey, sessionKey, username, username, fd)
                 except Exception as e:
                     logging.debug("Exception:", exc_info=True)
@@ -488,6 +489,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(add_help=True, description="Queries target domain for SPNs that are running "
                                                                 "under a user account")
 
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)")
     parser.add_argument('target', action='store', help='domain[/username[:password]]')
     parser.add_argument('-target-domain', action='store',
                         help='Domain to query/request if different than the domain of the user. '
@@ -528,6 +530,7 @@ if __name__ == '__main__':
     group.add_argument('-dc-host', action='store', metavar='hostname', help='Hostname of the domain controller to use. '
                                                                             'If ommited, the domain part (FQDN) '
                                                                             'specified in the account parameter will be used')
+    
 
     if len(sys.argv) == 1:
         parser.print_help()

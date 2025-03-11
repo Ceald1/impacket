@@ -969,7 +969,7 @@ class DCERPC_v5(DCERPC):
                 self.__nthash = nthash
                 pass
 
-    def bind(self, iface_uuid, alter = 0, bogus_binds = 0, transfer_syntax = ('8a885d04-1ceb-11c9-9fe8-08002b104860', '2.0')):
+    def bind(self, iface_uuid, alter = 0, bogus_binds = 0, transfer_syntax = ('8a885d04-1ceb-11c9-9fe8-08002b104860', '2.0'), legacy_etype=True):
         bind = MSRPCBind()
         #item['TransferSyntax']['Version'] = 1
         ctx = self._ctx
@@ -1017,7 +1017,7 @@ class DCERPC_v5(DCERPC):
                                                                                      self.__nthash, self.__aesKey,
                                                                                      self.__TGT, self.__TGS,
                                                                                      self._transport.getRemoteName(),
-                                                                                     self._transport.get_kdcHost())
+                                                                                     self._transport.get_kdcHost(), legacy_etype=legacy_etype)
             else:
                 raise DCERPCException('Unsupported auth_type 0x%x' % self.__auth_type)
 

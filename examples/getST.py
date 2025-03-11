@@ -87,6 +87,7 @@ class GETST:
         self.__additional_ticket = options.additional_ticket
         self.__saveFileName = None
         self.__no_s4u2proxy = options.no_s4u2proxy
+        self.legacy = options.legacy
         if options.hashes is not None:
             self.__lmhash, self.__nthash = options.hashes.split(':')
 
@@ -706,7 +707,7 @@ class GETST:
                 logging.info('Getting ST for user')
 
             serverName = Principal(self.__options.spn, type=constants.PrincipalNameType.NT_SRV_INST.value)
-            tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, self.__kdcHost, tgt, cipher, sessionKey, self.__options.renew, legacy_etype=False)
+            tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, self.__kdcHost, tgt, cipher, sessionKey, self.__options.renew, legacy_etype=self.legacy)
             self.__saveFileName = self.__user
         else:
             # Here's the rock'n'roll
@@ -755,6 +756,7 @@ if __name__ == '__main__':
                                                                         'specified -identity should be provided. This allows impresonation of protected users '
                                                                         'and bypass of "Kerberos-only" constrained delegation restrictions. See CVE-2020-17049')
     parser.add_argument('-renew', action='store_true', help='Sets the RENEW ticket option to renew the TGT used for authentication. Set -spn to \'krbtgt/DOMAINFQDN\'')
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)")
 
     group = parser.add_argument_group('authentication')
 
