@@ -366,7 +366,7 @@ def getKerberosTGT(clientName, password, domain, lmhash, nthash, aesKey='', kdcH
 
     return tgt, cipher, key, sessionKey
 
-def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew = False):
+def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew = False, legacy_etype=True):
 
     # Decode the TGT
     try:
@@ -442,14 +442,24 @@ def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew =
 
     reqBody['till'] = KerberosTime.to_asn1(now)
     reqBody['nonce'] = rand.getrandbits(31)
-    seq_set_iter(reqBody, 'etype',
-                      (
-                          int(constants.EncryptionTypes.rc4_hmac.value),
-                          int(constants.EncryptionTypes.des3_cbc_sha1_kd.value),
-                          int(constants.EncryptionTypes.des_cbc_md5.value),
-                          int(cipher.enctype)
-                       )
-                )
+    if legacy_etype == True:
+        seq_set_iter(reqBody, 'etype',
+                        (
+                            int(constants.EncryptionTypes.rc4_hmac.value),
+                            int(constants.EncryptionTypes.des3_cbc_sha1_kd.value),
+                            int(constants.EncryptionTypes.des_cbc_md5.value),
+                            int(cipher.enctype)
+                        )
+                    )
+    else:
+                seq_set_iter(reqBody, 'etype',
+                        (
+                            int(constants.EncryptionTypes.aes256_cts_hmac_sha1_96.value),
+                            int(constants.EncryptionTypes.aes128_cts_hmac_sha1_96.value),
+                            # int(constants.EncryptionTypes..value),
+                            int(cipher.enctype)
+                        )
+                    )
 
     message = encoder.encode(tgsReq)
 
