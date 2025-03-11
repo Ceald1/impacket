@@ -762,7 +762,7 @@ if __name__ == '__main__':
                                                                         'specified -identity should be provided. This allows impresonation of protected users '
                                                                         'and bypass of "Kerberos-only" constrained delegation restrictions. See CVE-2020-17049')
     parser.add_argument('-renew', action='store_true', help='Sets the RENEW ticket option to renew the TGT used for authentication. Set -spn to \'krbtgt/DOMAINFQDN\'')
-    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)")
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)", default=False)
 
     group = parser.add_argument_group('authentication')
 
