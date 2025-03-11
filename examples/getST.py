@@ -663,11 +663,11 @@ class GETST:
         reqBody['nonce'] = random.getrandbits(31)
         seq_set_iter(reqBody, 'etype',
                      (
-                         int(constants.EncryptionTypes.rc4_hmac.value),
-                         int(constants.EncryptionTypes.des3_cbc_sha1_kd.value),
-                         int(constants.EncryptionTypes.des_cbc_md5.value),
-                         int(cipher.enctype)
-                     )
+                            int(constants.EncryptionTypes.aes256_cts_hmac_sha1_96.value),
+                            int(constants.EncryptionTypes.aes128_cts_hmac_sha1_96.value),
+                            # int(constants.EncryptionTypes..value),
+                            # int(cipher.enctype)
+                        )
                      )
         message = encoder.encode(tgsReq)
 
