@@ -706,7 +706,7 @@ class GETST:
                 logging.info('Getting ST for user')
 
             serverName = Principal(self.__options.spn, type=constants.PrincipalNameType.NT_SRV_INST.value)
-            tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, self.__kdcHost, tgt, cipher, sessionKey, self.__options.renew)
+            tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, domain, self.__kdcHost, tgt, cipher, sessionKey, self.__options.renew, legacy_etype=False)
             self.__saveFileName = self.__user
         else:
             # Here's the rock'n'roll
