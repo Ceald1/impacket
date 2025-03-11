@@ -366,7 +366,7 @@ def getKerberosTGT(clientName, password, domain, lmhash, nthash, aesKey='', kdcH
 
     return tgt, cipher, key, sessionKey
 
-def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew = False, legacy_etype=True):
+def getKerberosTGS(serverName, domain, kdcHost, tgt, cipher, sessionKey, renew = False, legacy_etype=False):
 
     # Decode the TGT
     try:
