@@ -343,11 +343,11 @@ class GETST:
             reqBody['nonce'] = random.getrandbits(31)
             seq_set_iter(reqBody, 'etype',
                          (
-                             int(constants.EncryptionTypes.rc4_hmac.value),
-                             int(constants.EncryptionTypes.des3_cbc_sha1_kd.value),
-                             int(constants.EncryptionTypes.des_cbc_md5.value),
-                             int(cipher.enctype)
-                         )
+                            int(constants.EncryptionTypes.aes256_cts_hmac_sha1_96.value),
+                            int(constants.EncryptionTypes.aes128_cts_hmac_sha1_96.value),
+                            # int(constants.EncryptionTypes..value),
+                            # int(cipher.enctype)
+                        )
                          )
             message = encoder.encode(tgsReq)
 
@@ -480,7 +480,12 @@ class GETST:
         reqBody['till'] = KerberosTime.to_asn1(now)
         reqBody['nonce'] = random.getrandbits(31)
         seq_set_iter(reqBody, 'etype',
-                     (int(cipher.enctype), int(constants.EncryptionTypes.rc4_hmac.value)))
+                     (
+                            int(constants.EncryptionTypes.aes256_cts_hmac_sha1_96.value),
+                            int(constants.EncryptionTypes.aes128_cts_hmac_sha1_96.value),
+                            # int(constants.EncryptionTypes..value),
+                            # int(cipher.enctype)
+                        )
 
         if self.__options.u2u:
             seq_set_iter(reqBody, 'additional-tickets', (ticket.to_asn1(TicketAsn1()),))
