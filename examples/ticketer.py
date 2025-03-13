@@ -345,7 +345,7 @@ class TICKETER:
             else:
                 serverName = Principal(self.__options.spn, type=PrincipalNameType.NT_SRV_INST.value)
                 tgs, cipher, oldSessionKey, sessionKey = getKerberosTGS(serverName, self.__domain, None, tgt, cipher,
-                                                                        sessionKey)
+                                                                        sessionKey, legacy_etype=self.__options.legacy)
                 kdcRep = decoder.decode(tgs, asn1Spec=TGS_REP())[0]
 
             # Let's check we have all the necessary data based on the ciphers used. Boring checks
@@ -1130,6 +1130,7 @@ if __name__ == '__main__':
                                                                              '(default = 24*365*10)')
     parser.add_argument('-ts', action='store_true', help='Adds timestamp to every logging output')
     parser.add_argument('-debug', action='store_true', help='Turn DEBUG output ON')
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)", default=False)
 
     group = parser.add_argument_group('authentication')
 

@@ -713,7 +713,7 @@ def kerberoast_from_ccache(decodedTGS, spn, username, domain):
             entry = '$krb5tgs$%d$*%s$%s$%s*$%s$%s' % (
                 constants.EncryptionTypes.des_cbc_md5.value, username, domain, spn.replace(':', '~'),
                 hexlify(decodedTGS['ticket']['enc-part']['cipher'][:16].asOctets()).decode(),
-                hexlify(decodedTGS['ticket']['enc-part']['cipher'][16:].asOctets()).decode())
+                hexlify(decodedTGS['ticket']['enc-part']['cipher'][16:].asOctets()).decode()) # I hope no one still uses DES for kerberos
         else:
             logging.debug('Skipping %s/%s due to incompatible e-type %d' % (
                 decodedTGS['ticket']['sname']['name-string'][0], decodedTGS['ticket']['sname']['name-string'][1],

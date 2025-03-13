@@ -1167,7 +1167,7 @@ class RAISECHILD:
                 tgsCIFS, cipherCIFS, oldSessionKeyCIFS, sessionKeyCIFS = getKerberosTGS(serverName,
                                                                                         childCreds['domain'], None,
                                                                                         goldenTicket, cipher,
-                                                                                        sessionKey)
+                                                                                        sessionKey, legacy_etype=self.options.legacy)
                 TGS['KDC_REP'] = tgsCIFS
                 TGS['cipher'] = cipherCIFS
                 TGS['oldSessionKey'] = oldSessionKeyCIFS
@@ -1272,6 +1272,8 @@ if __name__ == '__main__':
                        'ones specified in the command line')
     group.add_argument('-aesKey', action="store", metavar = "hex key", help='AES key to use for Kerberos Authentication '
                                                                             '(128 or 256 bits)')
+    parser.add_argument("-legacy", action='store_true', help="use legacy encryption types (pre windows server 2025)", default=False)
+
 
     if len(sys.argv)==1:
         parser.print_help()
